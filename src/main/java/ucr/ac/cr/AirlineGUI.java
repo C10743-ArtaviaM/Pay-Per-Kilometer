@@ -3,6 +3,33 @@ package ucr.ac.cr;
 import javax.swing.*;;
 
 public class AirlineGUI {
+    /**
+     * This method calculates the distance between two points around the world.
+     * 
+     * @param x1 Latitudes of the origin.
+     * @param y1 Longitudes of the origin.
+     * @param x2 Latitudes of the destine.
+     * @param y2 Longitudes of the destine.
+     * @return A double return consisting in the distance.
+     */
+    public double calcDistance(double x1, double y1, double x2, double y2) {
+        double distance = 0;
+
+        distance = 6371.01
+                * Math.acos(Math.sin(Math.toRadians(x1)) * Math.sin(Math.toRadians(x2)) + Math.cos(Math.toRadians(x1))
+                        * Math.cos(Math.toRadians(x2)) * Math.cos((Math.toRadians(y1)) - (Math.toRadians(y2))));
+        distance = Math.round(distance);
+
+        return distance;
+    }
+
+    /**
+     * Main menu of the program.
+     * 
+     * @param iD         Array that contains the IDs of the cities.
+     * @param latitudes  Array that contains the latitudes of the cities.
+     * @param longitudes Array that contains the longitudes of the cities.
+     */
     public void menu(String[] iD, double[] latitudes, double[] longitudes) {
         // Boolean Type Variables.
         boolean running = true;
@@ -36,7 +63,7 @@ public class AirlineGUI {
 
                 // Flight distance calculator
                 if (userInputInt == 1) {
-                    // Boolean Type Variables/
+                    // Boolean Type Variables.
                     boolean destineFound = false;
                     boolean originFound = false;
 
@@ -44,14 +71,17 @@ public class AirlineGUI {
                     int destine = 0;
                     int origin = 0;
 
+                    // Double Type Variables.
+                    double distance = 0;
+
                     /*
                      * While cicle that let the user input the origin city between the valid
                      * options.
                      */
                     while (originFound == false) {
                         String arrayInfo = arrayToString(iD, "origin");
-                        userInput = JOptionPane.showInputDialog(gui, arrayInfo,
-                                "MENU");
+                        userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Origin", 1);
+
                         for (int i = 0; i < iD.length; i++) {
                             if (iD[i].equalsIgnoreCase(userInput)) {
                                 origin = i;
@@ -59,7 +89,12 @@ public class AirlineGUI {
                                 break;
                             }
                         }
-                        System.out.println("You have entered a wrong origin city. Please input a correct option.");
+
+                        if (originFound == false) {
+                            JOptionPane.showMessageDialog(gui,
+                                    "You have entered a wrong origin city. Please input a correct option.", "ERROR",
+                                    JOptionPane.WARNING_MESSAGE);
+                        }
                     }
 
                     /*
@@ -67,19 +102,9 @@ public class AirlineGUI {
                      * options.
                      */
                     while (destineFound == false) {
-                        System.out.println("Please, input the destine city between");
-                        for (int i = 0; i < iD.length; i++) {
-                            if (i == 0) {
-                                System.out.print("[" + iD[i] + ",");
-                            } else if (i == (iD.length - 1)) {
-                                System.out.println(" " + iD[i] + "]");
-                            } else {
-                                System.out.print(" " + iD[i] + ",");
-                            }
-                        }
+                        String arrayInfo = arrayToString(iD, "destine");
+                        userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Destine", 1);
 
-                        System.out.print("-> ");
-                        // userInput = input.nextLine();
                         for (int i = 0; i < iD.length; i++) {
                             if (iD[i].equalsIgnoreCase(userInput)) {
                                 destine = i;
@@ -87,12 +112,17 @@ public class AirlineGUI {
                                 break;
                             }
                         }
-                        System.out.println("You have entered a wrong origin city. Please input a correct option.");
+                        if (originFound == false) {
+                            JOptionPane.showMessageDialog(gui,
+                                    "You have entered a wrong destine city. Please input a correct option.", "ERROR",
+                                    JOptionPane.WARNING_MESSAGE);
+                        }
                     }
 
-                    // System.out.println("The Flight has a distance of " +
-                    // calcDistance(latitudes[origin],
-                    // longitudes[origin], latitudes[destine], longitudes[destine]) + "KM.");
+                    distance = calcDistance(latitudes[origin], longitudes[origin], latitudes[destine],
+                            longitudes[destine]);
+
+                    JOptionPane.showMessageDialog(gui, "The Flight has a distance of " + distance + "KM.");
 
                     // Trip Quoter
                 } else if (userInputInt == 2) {
@@ -244,7 +274,7 @@ public class AirlineGUI {
             if (i == 0) {
                 arrayInfo = arrayInfo + "[" + array[i] + ",";
             } else if (i == (array.length - 1)) {
-                arrayInfo = " " + array[i] + "]";
+                arrayInfo = arrayInfo + " " + array[i] + "]";
             } else {
                 arrayInfo = arrayInfo + " " + array[i] + ",";
             }

@@ -7,7 +7,7 @@ import java.util.Scanner;
  */
 public class Airline {
     /**
-     * This method calculates the distance between two points arround the world.
+     * This method calculates the distance between two points around the world.
      * 
      * @param x1 Latitudes of the origin.
      * @param y1 Longitudes of the origin.
@@ -173,7 +173,10 @@ public class Airline {
                                 break;
                             }
                         }
-                        System.out.println("You have entered a wrong origin city. Please input a correct option.");
+
+                        if (originFound == false) {
+                            System.out.println("You have entered a wrong origin city. Please input a correct option.");
+                        }
                     }
 
                     /*
@@ -201,7 +204,10 @@ public class Airline {
                                 break;
                             }
                         }
-                        System.out.println("You have entered a wrong origin city. Please input a correct option.");
+
+                        if (destineFound == false) {
+                            System.out.println("You have entered a wrong destine city. Please input a correct option.");
+                        }
                     }
 
                     System.out.println("The Flight has a distance of " + calcDistance(latitudes[origin],
@@ -237,6 +243,11 @@ public class Airline {
                         if (userInput.equalsIgnoreCase("REG") || userInput.equalsIgnoreCase("PREM")) {
                             correctSubscription = true;
                             subscription = userInput;
+                        }
+
+                        if (correctSubscription == false) {
+                            System.out.println(
+                                    "You have entered a wrong subscription type. Please input a correct option.");
                         }
                     }
 
@@ -282,6 +293,10 @@ public class Airline {
                                 correctOrigin = true;
                                 break;
                             }
+                        }
+
+                        if (correctOrigin == false) {
+                            System.out.println("You have entered a wrong destine city. Please input a correct option.");
                         }
                     }
 
@@ -330,6 +345,10 @@ public class Airline {
                                 correctDestine = true;
                                 break;
                             }
+                        }
+
+                        if (correctDestine == false) {
+                            System.out.println("You have entered a wrong destine city. Please input a correct option.");
                         }
                     }
 
