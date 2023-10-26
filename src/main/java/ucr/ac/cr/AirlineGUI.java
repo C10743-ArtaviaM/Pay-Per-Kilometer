@@ -24,6 +24,103 @@ public class AirlineGUI {
     }
 
     /**
+     * This method calculates the total price of the travel.
+     * 
+     * @param distance   The distance of the travel.
+     * @param clientType The type of the passenger.
+     * @return A double return consisting in the price.
+     */
+    public double travelPrice(double distance, String clientType) {
+        double price = 0;
+        double exceedingDistance = 0;
+
+        if (distance >= 1 && distance <= 1000) {
+            if (clientType.equalsIgnoreCase("PREM")) {
+                price = distance * 0.55;
+            } else { // Regular Client
+                price = distance * 0.6;
+            }
+        } else if (distance <= 2000) {
+            exceedingDistance = distance - 1000;
+            if (clientType.equalsIgnoreCase("PREM")) {
+                price = (exceedingDistance * 0.30) + (1000 * 0.55);
+            } else { // Regular Client
+                price = (exceedingDistance * 0.4) + (1000 * 0.6);
+            }
+        } else {
+            exceedingDistance = distance - 2000;
+            if (clientType.equalsIgnoreCase("PREM")) {
+                price = (exceedingDistance * 0.25) + (1000 * 0.30) + (1000 * 0.55);
+            } else { // Regular Client
+                price = (exceedingDistance * 0.3) + (1000 * 0.4) + (1000 * 0.6);
+            }
+        }
+        return price;
+    }
+
+    /**
+     * This method calculates the total distance of the travel.
+     * 
+     * @param iD         Array that contains the IDs of the cities.
+     * @param latitudes  Array that contains the latitudes of the cities.
+     * @param longitudes Array that contains the longitudes of the cities.
+     * @param route      Array that contains the route of the passenger.
+     * @return A double return consisting in the total distance of the flight.
+     */
+    public double calcTotalDistance(String[] iD, double[] latitudes, double[] longitudes, String[] route) {
+        double totalDistance = 0;
+        double prevLatitude = 0;
+        double prevLongitude = 0;
+
+        for (int i = 0; i < route.length; i++) {
+            for (int j = 0; j < iD.length; j++) {
+                if (route[i].equalsIgnoreCase(iD[j])) {
+                    if (i != 0) {
+                        totalDistance = totalDistance
+                                + calcDistance(latitudes[i], longitudes[i], prevLatitude, prevLongitude);
+
+                        /*
+                         * The next variables saves the previous city latitudes and used them later to
+                         * calculate the distances
+                         */
+                        prevLatitude = latitudes[i];
+                        prevLongitude = longitudes[i];
+                    } else {
+                        /*
+                         * The next variables saves the previous city latitudes and used them later to
+                         * calculate the distances
+                         */
+                        prevLatitude = latitudes[i];
+                        prevLongitude = longitudes[i];
+                    }
+                }
+            }
+        }
+        return totalDistance;
+    }
+
+    public String arrayToString(String[] array, String point) {
+        String arrayInfo = "";
+        if (point.equalsIgnoreCase("layover")) {
+            arrayInfo = "Please input the " + point + "between\n";
+        } else {
+            arrayInfo = "Please, input the " + point + " city between\n";
+        }
+
+        for (int i = 0; i < array.length; i++) {
+            if (i == 0) {
+                arrayInfo = arrayInfo + "[" + array[i] + ",";
+            } else if (i == (array.length - 1)) {
+                arrayInfo = arrayInfo + " " + array[i] + "]";
+            } else {
+                arrayInfo = arrayInfo + " " + array[i] + ",";
+            }
+        }
+
+        return arrayInfo;
+    }
+
+    /**
      * Main menu of the program.
      * 
      * @param iD         Array that contains the IDs of the cities.
@@ -128,10 +225,10 @@ public class AirlineGUI {
                 } else if (userInputInt == 2) {
                     // Boolean Type Variables.
                     boolean correctAmountLayovers = false;
-                    boolean correctData = false;
-                    boolean correctDestine = false;
-                    boolean correctOrigin = false;
-                    boolean correctSubscription = false;
+                    boolean destineFound = false;
+                    boolean layoversFound = false;
+                    boolean originFound = false;
+                    boolean subscriptionFound = false;
 
                     // Double Type Variables.
                     double totalDistance;
@@ -147,13 +244,18 @@ public class AirlineGUI {
                      * While cicle that let the user input the subscription type between the valid
                      * options.
                      */
-                    while (correctSubscription == false) {
-                        System.out.print("Input the subscription type between\n[REG | PREM]\n-> ");
-                        // userInput = input.nextLine();
+                    while (subscriptionFound == false) {
+                        userInput = JOptionPane.showInputDialog(gui,
+                                "Input the subscription type between [REG | PREM]:", "Subscription", 1);
 
                         if (userInput.equalsIgnoreCase("REG") || userInput.equalsIgnoreCase("PREM")) {
-                            correctSubscription = true;
+                            subscriptionFound = true;
                             subscription = userInput;
+                        } else {
+                            JOptionPane.showMessageDialog(gui,
+                                    "You have entered a wrong subscription type. Please input a correct option.",
+                                    "ERROR",
+                                    JOptionPane.WARNING_MESSAGE);
                         }
                     }
 
@@ -161,22 +263,25 @@ public class AirlineGUI {
                      * While cicle that let the user input the amount of layovers.
                      */
                     while (correctAmountLayovers == false) {
-                        System.out.print("Please insert the amount of layovers\n-> ");
-                        // userInput = input.nextLine();
+                        userInput = JOptionPane.showInputDialog(gui, "Please insert the amount of layovers:",
+                                "Layovers", 1);
 
                         try {
                             userInputInt = Integer.parseInt(userInput);
 
                             if (userInputInt < 0) {
-                                System.out.println("ERROR: The option " + userInput
+                                JOptionPane.showMessageDialog(gui, "The option " + userInput
                                         + " is negative and you can't have negative layovers. Please select a correct amount of layovers.");
                             } else {
                                 layovers = userInputInt;
                                 correctAmountLayovers = true;
                             }
                         } catch (Exception invalidInt) {
-                            System.out.println("ERROR: You can't convert " + userInput
-                                    + " to an Int Value. Please select a correct amount of layovers.");
+                            JOptionPane.showMessageDialog(gui,
+                                    "You can't convert " + userInput
+                                            + " to an Int Value. Please select a correct amount of layovers.",
+                                    "ERROR",
+                                    JOptionPane.WARNING_MESSAGE);
                         }
                     }
 
@@ -189,16 +294,22 @@ public class AirlineGUI {
                      * While cicle that let the user input the origin city between the valid
                      * options.
                      */
-                    while (correctOrigin == false) {
-                        System.out.print("Please insert your origin city\n-> ");
-                        // userInput = input.nextLine();
+                    while (originFound == false) {
+                        String arrayInfo = arrayToString(iD, "origin");
+                        userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Origin", 1);
 
                         for (int i = 0; i < iD.length; i++) {
                             if (userInput.equalsIgnoreCase(iD[i])) {
                                 route[0] = userInput;
-                                correctOrigin = true;
+                                originFound = true;
                                 break;
                             }
+                        }
+
+                        if (originFound == false) {
+                            JOptionPane.showMessageDialog(gui,
+                                    "You have entered a wrong origin city. Please input a correct option.", "ERROR",
+                                    JOptionPane.WARNING_MESSAGE);
                         }
                     }
 
@@ -209,26 +320,29 @@ public class AirlineGUI {
                         /*
                          * While cicle that let the user input the layovers between the valid options.
                          */
-                        while (correctData == false) {
+                        while (layoversFound == false) {
                             int counter = 1;
 
                             while (counter <= layovers) {
-                                System.out.print("Please insert your layover #" + counter + "\n-> ");
-                                // userInput = input.nextLine();
+                                String layover = "layover #" + counter;
+                                String arrayInfo = arrayToString(iD, layover);
+                                userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Origin", 1);
 
                                 for (int i = 1; i < iD.length; i++) {
                                     if (userInput.equalsIgnoreCase(iD[i])) {
                                         route[counter] = userInput;
-                                        correctData = true;
+                                        layoversFound = true;
                                         counter++;
                                         break;
                                     }
 
                                 }
 
-                                if (correctData == false) {
-                                    System.out.println(
-                                            "You have entered an incorrect city, please enter all the layovers again");
+                                if (layoversFound == false) {
+                                    JOptionPane.showMessageDialog(gui,
+                                            "You have entered an incorrect city, please enter all the layovers again",
+                                            "ERROR",
+                                            JOptionPane.WARNING_MESSAGE);
                                 }
                             }
                         }
@@ -238,48 +352,43 @@ public class AirlineGUI {
                      * While cicle that let the user input the destine city between the valid
                      * options.
                      */
-                    while (correctDestine == false) {
-                        System.out.print("Please insert your destine city\n-> ");
-                        // userInput = input.nextLine();
+                    while (destineFound == false) {
+                        String arrayInfo = arrayToString(iD, "destine");
+                        userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Destine", 1);
+
                         for (int i = 0; i < iD.length; i++) {
                             if (userInput.equalsIgnoreCase(iD[i])) {
                                 route[iD.length - 1] = userInput;
-                                correctDestine = true;
+                                destineFound = true;
                                 break;
                             }
+                        }
+
+                        if (destineFound == false) {
+                            JOptionPane.showMessageDialog(gui,
+                                    "You have entered a wrong destine city. Please input a correct option.", "ERROR",
+                                    JOptionPane.WARNING_MESSAGE);
                         }
                     }
 
                     /*
                      * Calculates the total distance of the travel and generates the cost of it.
                      */
-                    // totalDistance = calcTotalDistance(iD, latitudes, longitudes, route);
-                    // System.out.println("The flight will have a cost of " +
-                    // travelPrice(totalDistance, subscription));
+                    totalDistance = calcTotalDistance(iD, latitudes, longitudes, route);
+                    JOptionPane.showMessageDialog(gui,
+                            "The flight will have a cost of $" + travelPrice(totalDistance, subscription) + ".",
+                            "COST INFO",
+                            JOptionPane.PLAIN_MESSAGE);
                     // Close
                 } else {
                     running = false;
                 }
             } else {
-                System.out.println("ERROR: The option " + userInput
-                        + "is not part of the menu. Please select a correct menu option.");
+                JOptionPane.showMessageDialog(gui,
+                        "The option " + userInput + "is not part of the menu. Please select a correct menu option.",
+                        "ERROR",
+                        JOptionPane.WARNING_MESSAGE);
             }
         }
-    }
-
-    public String arrayToString(String[] array, String point) {
-        String arrayInfo = "Please, input the " + point + " city between\n";
-
-        for (int i = 0; i < array.length; i++) {
-            if (i == 0) {
-                arrayInfo = arrayInfo + "[" + array[i] + ",";
-            } else if (i == (array.length - 1)) {
-                arrayInfo = arrayInfo + " " + array[i] + "]";
-            } else {
-                arrayInfo = arrayInfo + " " + array[i] + ",";
-            }
-        }
-
-        return arrayInfo;
     }
 }
