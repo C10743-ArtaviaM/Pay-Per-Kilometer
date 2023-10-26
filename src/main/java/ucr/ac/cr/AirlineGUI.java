@@ -5,6 +5,13 @@ import javax.swing.*;;
 public class AirlineGUI {
     MathCalcs mathC = new MathCalcs();
 
+    /**
+     * Method used to print in a format way the IDs array.
+     * 
+     * @param array IDs array.
+     * @param point Point of the travel.
+     * @return A string consisting in the array IDs.
+     */
     public String arrayToString(String[] array, String point) {
         String arrayInfo = "";
         if (point.equalsIgnoreCase("layover")) {

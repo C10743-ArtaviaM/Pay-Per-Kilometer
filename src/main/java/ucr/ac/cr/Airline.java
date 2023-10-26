@@ -10,6 +10,35 @@ public class Airline {
     MathCalcs mathC = new MathCalcs();
 
     /**
+     * Method used to print in a format way the IDs array.
+     * 
+     * @param array IDs array.
+     * @param point Point of the travel.
+     * @return A string consisting in the array IDs.
+     */
+    public String arrayToString(String[] array, String point) {
+        String arrayInfo = "";
+        if (point.equalsIgnoreCase("layover")) {
+            arrayInfo = "Please input the " + point + "between\n";
+        } else {
+            arrayInfo = "Please, input the " + point + " city between\n";
+        }
+
+        for (int i = 0; i < array.length; i++) {
+            if (i == 0) {
+                arrayInfo = arrayInfo + "[" + array[i] + ",";
+            } else if (i == (array.length - 1)) {
+                arrayInfo = arrayInfo + " " + array[i] + "]";
+            } else {
+                arrayInfo = arrayInfo + " " + array[i] + ",";
+            }
+        }
+
+        arrayInfo = arrayInfo + "\n-> ";
+        return arrayInfo;
+    }
+
+    /**
      * Main menu of the program.
      * 
      * @param iD         Array that contains the IDs of the cities.
@@ -31,10 +60,11 @@ public class Airline {
 
         System.out.println("Welcome to the System of your new airline, PPK.");
 
-        // Makes the menu main function.
+        // While cicle that makes the menu main function.
         while (running) {
             System.out.print("MENU:\n1) Calculate Flight Distance.\n2) Quote Trip\n3) Exit\n-> ");
             userInput = input.nextLine();
+
             try {
                 userInputInt = Integer.parseInt(userInput);
             } catch (Exception invalidInt) {
@@ -60,19 +90,9 @@ public class Airline {
                      * options.
                      */
                     while (originFound == false) {
-                        System.out.println("Please, input the origin city between");
-                        for (int i = 0; i < iD.length; i++) {
-                            if (i == 0) {
-                                System.out.print("[" + iD[i] + ",");
-                            } else if (i == (iD.length - 1)) {
-                                System.out.println(" " + iD[i] + "]");
-                            } else {
-                                System.out.print(" " + iD[i] + ",");
-                            }
-                        }
-
-                        System.out.print("-> ");
+                        System.out.println(arrayToString(iD, "origin"));
                         userInput = input.nextLine();
+
                         for (int i = 0; i < iD.length; i++) {
                             if (iD[i].equalsIgnoreCase(userInput)) {
                                 origin = i;

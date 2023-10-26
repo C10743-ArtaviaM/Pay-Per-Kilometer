@@ -36,6 +36,7 @@ public class Main {
                 userOptionString = input.nextLine();
                 userOption = Integer.parseInt(userOptionString);
 
+                // It ensures that the user input a valid initialization option.
                 if (userOption != 1 && userOption != 2) {
                     System.out.println("ERROR: The option " + userOptionString
                             + " is not part of the initialization options. Please select a initialization option.");
