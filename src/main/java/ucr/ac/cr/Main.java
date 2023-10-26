@@ -58,6 +58,7 @@ public class Main {
 
         System.out.println("Closing the app . . .");
         input.close();
+        System.exit(0);
     }
 
     /**
