@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"src.main.java.ucr.ac.cr","l":"Airline"},{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"src.main.java.ucr.ac.cr","l":"Main"}];updateSearchResults();
