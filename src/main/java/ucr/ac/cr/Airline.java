@@ -3,7 +3,7 @@ package ucr.ac.cr;
 import java.util.Scanner;
 
 /**
- * Airline class which controls all the related with the calcs.
+ * Airline class which controls the program via console / terminal.
  */
 public class Airline {
     // Class Type Variables.
@@ -16,14 +16,19 @@ public class Airline {
      * @param point Point of the travel.
      * @return A string consisting in the array IDs.
      */
-    public String arrayToString(String[] array, String point) {
+    public String arrayToString(String[] array, String point, String type) {
         String arrayInfo = "";
-        if (point.equalsIgnoreCase("layover")) {
+
+        // If condition that checks if the point is a layover or not.
+        if (type.equalsIgnoreCase("layover")) {
             arrayInfo = "Please input the " + point + "between\n";
         } else {
             arrayInfo = "Please, input the " + point + " city between\n";
         }
 
+        /*
+         * For cicle that makes the string with all the IDs array info.
+         */
         for (int i = 0; i < array.length; i++) {
             if (i == 0) {
                 arrayInfo = arrayInfo + "[" + array[i] + ",";
@@ -60,11 +65,17 @@ public class Airline {
 
         System.out.println("Welcome to the System of your new airline, PPK.");
 
-        // While cicle that makes the menu main function.
+        /*
+         * While cicle that makes the menu main function.
+         */
         while (running) {
             System.out.print("MENU:\n1) Calculate Flight Distance.\n2) Quote Trip\n3) Exit\n-> ");
             userInput = input.nextLine();
 
+            /*
+             * Try / Catch that ensures that the user put a correct input, avoiding that the
+             * program falls if not.
+             */
             try {
                 userInputInt = Integer.parseInt(userInput);
             } catch (Exception invalidInt) {
@@ -72,7 +83,7 @@ public class Airline {
                         + "to an Int Value. Please select a correct menu option.");
             }
 
-            // It ensures that the user input a valid menu option.
+            // If condition that ensures that the user input a valid menu option.
             if (userInputInt >= 1 && userInputInt <= 3) {
 
                 // Flight distance calculator
@@ -90,9 +101,12 @@ public class Airline {
                      * options.
                      */
                     while (originFound == false) {
-                        System.out.println(arrayToString(iD, "origin"));
-                        userInput = input.nextLine();
+                        System.out.print(arrayToString(iD, "origin", "origin"));
+                        input.nextLine();
 
+                        /*
+                         * For cicle that compares the ID input with the IDs in the array.
+                         */
                         for (int i = 0; i < iD.length; i++) {
                             if (iD[i].equalsIgnoreCase(userInput)) {
                                 origin = i;
@@ -101,8 +115,11 @@ public class Airline {
                             }
                         }
 
+                        // If condition that checks if the origin input by the user exist, if not, sends
+                        // an error message.
                         if (originFound == false) {
-                            System.out.println("You have entered a wrong origin city. Please input a correct option.");
+                            System.out.println(
+                                    "ERROR: You have entered a wrong origin city. Please input a correct option.");
                         }
                     }
 
@@ -111,19 +128,12 @@ public class Airline {
                      * options.
                      */
                     while (destineFound == false) {
-                        System.out.println("Please, input the destine city between");
-                        for (int i = 0; i < iD.length; i++) {
-                            if (i == 0) {
-                                System.out.print("[" + iD[i] + ",");
-                            } else if (i == (iD.length - 1)) {
-                                System.out.println(" " + iD[i] + "]");
-                            } else {
-                                System.out.print(" " + iD[i] + ",");
-                            }
-                        }
+                        System.out.print(arrayToString(iD, "destine", "destine"));
+                        input.nextLine();
 
-                        System.out.print("-> ");
-                        userInput = input.nextLine();
+                        /*
+                         * For cicle that compares the ID input with the IDs in the array.
+                         */
                         for (int i = 0; i < iD.length; i++) {
                             if (iD[i].equalsIgnoreCase(userInput)) {
                                 destine = i;
@@ -132,11 +142,15 @@ public class Airline {
                             }
                         }
 
+                        // If condition that checks if the destine input by the user exist, if not,
+                        // sends an error message.
                         if (destineFound == false) {
-                            System.out.println("You have entered a wrong destine city. Please input a correct option.");
+                            System.out.println(
+                                    "ERROR: You have entered a wrong origin city. Please input a correct option.");
                         }
                     }
 
+                    // Prints the flight info to the user.
                     System.out.println("The Flight has a distance of " + mathC.calcDistance(latitudes[origin],
                             longitudes[origin], latitudes[destine], longitudes[destine]) + "KM.");
 
@@ -144,16 +158,14 @@ public class Airline {
                 } else if (userInputInt == 2) {
                     // Boolean Type Variables.
                     boolean correctAmountLayovers = false;
-                    boolean correctData = false;
-                    boolean correctDestine = false;
-                    boolean correctOrigin = false;
-                    boolean correctSubscription = false;
-
-                    // Double Type Variables.
-                    double totalDistance;
+                    boolean destineFound = false;
+                    boolean layoversFound = false;
+                    boolean originFound = false;
+                    boolean subscriptionFound = false;
 
                     // Int Type Variables.
                     int layovers = 0;
+                    int totalDistance = 0;
 
                     // String / String[] Type Variables.
                     String subscription = "";
@@ -163,16 +175,19 @@ public class Airline {
                      * While cicle that let the user input the subscription type between the valid
                      * options.
                      */
-                    while (correctSubscription == false) {
+                    while (subscriptionFound == false) {
                         System.out.print("Input the subscription type between\n[REG | PREM]\n-> ");
                         userInput = input.nextLine();
 
+                        // If condition that checks if the user inputs a correct subscription type.
                         if (userInput.equalsIgnoreCase("REG") || userInput.equalsIgnoreCase("PREM")) {
-                            correctSubscription = true;
+                            subscriptionFound = true;
                             subscription = userInput;
                         }
 
-                        if (correctSubscription == false) {
+                        // If condition that checks if the subscription input by the user exist, if not,
+                        // sends an error message.
+                        if (subscriptionFound == false) {
                             System.out.println(
                                     "You have entered a wrong subscription type. Please input a correct option.");
                         }
@@ -185,9 +200,14 @@ public class Airline {
                         System.out.print("Please insert the amount of layovers\n-> ");
                         userInput = input.nextLine();
 
+                        /*
+                         * Try / Catch that ensures that the user put a correct input, avoiding that the
+                         * program falls if not.
+                         */
                         try {
                             userInputInt = Integer.parseInt(userInput);
 
+                            // If conditions that checks if the amount of layovers isn't a negative option.
                             if (userInputInt < 0) {
                                 System.out.println("ERROR: The option " + userInput
                                         + " is negative and you can't have negative layovers. Please select a correct amount of layovers.");
@@ -210,48 +230,61 @@ public class Airline {
                      * While cicle that let the user input the origin city between the valid
                      * options.
                      */
-                    while (correctOrigin == false) {
-                        System.out.print("Please insert your origin city\n-> ");
-                        userInput = input.nextLine();
+                    while (originFound == false) {
+                        System.out.print(arrayToString(iD, "origin", "origin"));
+                        input.nextLine();
 
+                        /*
+                         * For cicle that compares the ID input with the IDs in the array.
+                         */
                         for (int i = 0; i < iD.length; i++) {
-                            if (userInput.equalsIgnoreCase(iD[i])) {
+                            if (iD[i].equalsIgnoreCase(userInput)) {
                                 route[0] = userInput;
-                                correctOrigin = true;
+                                originFound = true;
                                 break;
                             }
                         }
 
-                        if (correctOrigin == false) {
-                            System.out.println("You have entered a wrong destine city. Please input a correct option.");
+                        // If condition that checks if the origin input by the user exist, if not, sends
+                        // an error message.
+                        if (originFound == false) {
+                            System.out.println(
+                                    "ERROR: You have entered a wrong origin city. Please input a correct option.");
                         }
                     }
 
-                    /*
-                     * If condition that checks if the travel has layovers.
-                     */
+                    // If condition that checks if the travel has layovers.
                     if (layovers != 0) {
                         /*
                          * While cicle that let the user input the layovers between the valid options.
                          */
-                        while (correctData == false) {
+                        while (layoversFound == false) {
                             int counter = 1;
 
+                            /*
+                             * While cicle that let the user to input the layovers.
+                             */
                             while (counter <= layovers) {
-                                System.out.print("Please insert your layover #" + counter + "\n-> ");
+                                String layover = "layover #" + counter;
+                                System.out.print(arrayToString(iD, layover, "layover"));
                                 userInput = input.nextLine();
 
+                                /*
+                                 * For cicle that compares the ID input with the IDs in the array.
+                                 */
                                 for (int i = 1; i < iD.length; i++) {
-                                    if (userInput.equalsIgnoreCase(iD[i])) {
+                                    if (iD[i].equalsIgnoreCase(userInput)) {
                                         route[counter] = userInput;
-                                        correctData = true;
+                                        layoversFound = true;
                                         counter++;
                                         break;
                                     }
 
                                 }
 
-                                if (correctData == false) {
+                                // If condition that checks if the layovers input by the user exist, if not,
+                                // sends an error message.
+                                if (layoversFound == false) {
                                     System.out.println(
                                             "You have entered an incorrect city, please enter all the layovers again");
                                 }
@@ -263,19 +296,26 @@ public class Airline {
                      * While cicle that let the user input the destine city between the valid
                      * options.
                      */
-                    while (correctDestine == false) {
-                        System.out.print("Please insert your destine city\n-> ");
-                        userInput = input.nextLine();
+                    while (destineFound == false) {
+                        System.out.print(arrayToString(iD, "destine", "destine"));
+                        input.nextLine();
+
+                        /*
+                         * For cicle that compares the ID input with the IDs in the array.
+                         */
                         for (int i = 0; i < iD.length; i++) {
-                            if (userInput.equalsIgnoreCase(iD[i])) {
+                            if (iD[i].equalsIgnoreCase(userInput)) {
                                 route[iD.length - 1] = userInput;
-                                correctDestine = true;
+                                destineFound = true;
                                 break;
                             }
                         }
 
-                        if (correctDestine == false) {
-                            System.out.println("You have entered a wrong destine city. Please input a correct option.");
+                        // If condition that checks if the destine input by the user exist, if not,
+                        // sends an error message.
+                        if (destineFound == false) {
+                            System.out.println(
+                                    "ERROR: You have entered a wrong origin city. Please input a correct option.");
                         }
                     }
 

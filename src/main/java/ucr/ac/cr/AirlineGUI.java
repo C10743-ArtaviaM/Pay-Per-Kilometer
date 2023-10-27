@@ -1,8 +1,12 @@
 package ucr.ac.cr;
 
-import javax.swing.*;;
+import javax.swing.*;
 
+/**
+ * AirlineGUI class which controls the program via GUI / JOptionPane.
+ */
 public class AirlineGUI {
+    // Class Type Variables.
     MathCalcs mathC = new MathCalcs();
 
     /**
@@ -12,14 +16,19 @@ public class AirlineGUI {
      * @param point Point of the travel.
      * @return A string consisting in the array IDs.
      */
-    public String arrayToString(String[] array, String point) {
+    public String arrayToString(String[] array, String point, String type) {
         String arrayInfo = "";
-        if (point.equalsIgnoreCase("layover")) {
-            arrayInfo = "Please input the " + point + "between\n";
+
+        // If condition that checks if the point is a layover or not.
+        if (type.equalsIgnoreCase("layover")) {
+            arrayInfo = "Please input the " + point + " between\n";
         } else {
             arrayInfo = "Please, input the " + point + " city between\n";
         }
 
+        /*
+         * For cicle that makes the string with all the IDs array info.
+         */
         for (int i = 0; i < array.length; i++) {
             if (i == 0) {
                 arrayInfo = arrayInfo + "[" + array[i] + ",";
@@ -55,10 +64,17 @@ public class AirlineGUI {
 
         JOptionPane.showMessageDialog(gui, "Welcome to the System of your new airline, PPK.");
 
-        // Makes the menu main function.
+        /*
+         * While cicle that makes the menu main function.
+         */
         while (running) {
             userInput = JOptionPane.showInputDialog(gui, "1) Calculate Flight Distance.\n2) Quote Trip\n3) Exit",
                     "Menu", 1);
+
+            /*
+             * Try / Catch that ensures that the user put a correct input, avoiding that the
+             * program falls if not.
+             */
             try {
                 userInputInt = Integer.parseInt(userInput);
             } catch (Exception invalidInt) {
@@ -68,7 +84,7 @@ public class AirlineGUI {
                         "ERROR", JOptionPane.WARNING_MESSAGE);
             }
 
-            // It ensures that the user input a valid menu option.
+            // If condition that ensures that the user input a valid menu option.
             if (userInputInt >= 1 && userInputInt <= 3) {
 
                 // Flight distance calculator
@@ -89,9 +105,12 @@ public class AirlineGUI {
                      * options.
                      */
                     while (originFound == false) {
-                        String arrayInfo = arrayToString(iD, "origin");
+                        String arrayInfo = arrayToString(iD, "origin", "origin");
                         userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Origin", 1);
 
+                        /*
+                         * For cicle that compares the ID input with the IDs in the array.
+                         */
                         for (int i = 0; i < iD.length; i++) {
                             if (iD[i].equalsIgnoreCase(userInput)) {
                                 origin = i;
@@ -100,6 +119,8 @@ public class AirlineGUI {
                             }
                         }
 
+                        // If condition that checks if the origin input by the user exist, if not, sends
+                        // an error message.
                         if (originFound == false) {
                             JOptionPane.showMessageDialog(gui,
                                     "You have entered a wrong origin city. Please input a correct option.", "ERROR",
@@ -112,9 +133,12 @@ public class AirlineGUI {
                      * options.
                      */
                     while (destineFound == false) {
-                        String arrayInfo = arrayToString(iD, "destine");
+                        String arrayInfo = arrayToString(iD, "destine", "destine");
                         userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Destine", 1);
 
+                        /*
+                         * For cicle that compares the ID input with the IDs in the array.
+                         */
                         for (int i = 0; i < iD.length; i++) {
                             if (iD[i].equalsIgnoreCase(userInput)) {
                                 destine = i;
@@ -122,7 +146,10 @@ public class AirlineGUI {
                                 break;
                             }
                         }
-                        if (originFound == false) {
+
+                        // If condition that checks if the destine input by the user exist, if not,
+                        // sends an error message.
+                        if (destineFound == false) {
                             JOptionPane.showMessageDialog(gui,
                                     "You have entered a wrong destine city. Please input a correct option.", "ERROR",
                                     JOptionPane.WARNING_MESSAGE);
@@ -144,10 +171,8 @@ public class AirlineGUI {
                     boolean subscriptionFound = false;
 
                     // Double Type Variables.
-                    double totalDistance;
-
-                    // Int Type Variables.
                     int layovers = 0;
+                    int totalDistance = 0;
 
                     // String / String[] Type Variables.
                     String subscription = "";
@@ -161,6 +186,7 @@ public class AirlineGUI {
                         userInput = JOptionPane.showInputDialog(gui,
                                 "Input the subscription type between [REG | PREM]:", "Subscription", 1);
 
+                        // If condition that checks if the user inputs a correct subscription type.
                         if (userInput.equalsIgnoreCase("REG") || userInput.equalsIgnoreCase("PREM")) {
                             subscriptionFound = true;
                             subscription = userInput;
@@ -179,9 +205,14 @@ public class AirlineGUI {
                         userInput = JOptionPane.showInputDialog(gui, "Please insert the amount of layovers:",
                                 "Layovers", 1);
 
+                        /*
+                         * Try / Catch that ensures that the user put a correct input, avoiding that the
+                         * program falls if not.
+                         */
                         try {
                             userInputInt = Integer.parseInt(userInput);
 
+                            // If conditions that checks if the amount of layovers isn't a negative option.
                             if (userInputInt < 0) {
                                 JOptionPane.showMessageDialog(gui, "The option " + userInput
                                         + " is negative and you can't have negative layovers. Please select a correct amount of layovers.");
@@ -208,17 +239,22 @@ public class AirlineGUI {
                      * options.
                      */
                     while (originFound == false) {
-                        String arrayInfo = arrayToString(iD, "origin");
+                        String arrayInfo = arrayToString(iD, "origin", "origin");
                         userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Origin", 1);
 
+                        /*
+                         * For cicle that compares the ID input with the IDs in the array.
+                         */
                         for (int i = 0; i < iD.length; i++) {
-                            if (userInput.equalsIgnoreCase(iD[i])) {
+                            if (iD[i].equalsIgnoreCase(userInput)) {
                                 route[0] = userInput;
                                 originFound = true;
                                 break;
                             }
                         }
 
+                        // If condition that checks if the origin input by the user exist, if not, sends
+                        // an error message.
                         if (originFound == false) {
                             JOptionPane.showMessageDialog(gui,
                                     "You have entered a wrong origin city. Please input a correct option.", "ERROR",
@@ -226,9 +262,7 @@ public class AirlineGUI {
                         }
                     }
 
-                    /*
-                     * If condition that checks if the travel has layovers.
-                     */
+                    // If condition that checks if the travel has layovers.
                     if (layovers != 0) {
                         /*
                          * While cicle that let the user input the layovers between the valid options.
@@ -236,13 +270,19 @@ public class AirlineGUI {
                         while (layoversFound == false) {
                             int counter = 1;
 
+                            /*
+                             * While cicle that let the user to input the layovers.
+                             */
                             while (counter <= layovers) {
                                 String layover = "layover #" + counter;
-                                String arrayInfo = arrayToString(iD, layover);
+                                String arrayInfo = arrayToString(iD, layover, "layover");
                                 userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Origin", 1);
 
+                                /*
+                                 * For cicle that compares the ID input with the IDs in the array.
+                                 */
                                 for (int i = 1; i < iD.length; i++) {
-                                    if (userInput.equalsIgnoreCase(iD[i])) {
+                                    if (iD[i].equalsIgnoreCase(userInput)) {
                                         route[counter] = userInput;
                                         layoversFound = true;
                                         counter++;
@@ -251,6 +291,8 @@ public class AirlineGUI {
 
                                 }
 
+                                // If condition that checks if the layovers input by the user exist, if not,
+                                // sends an error message.
                                 if (layoversFound == false) {
                                     JOptionPane.showMessageDialog(gui,
                                             "You have entered an incorrect city, please enter all the layovers again",
@@ -266,17 +308,22 @@ public class AirlineGUI {
                      * options.
                      */
                     while (destineFound == false) {
-                        String arrayInfo = arrayToString(iD, "destine");
+                        String arrayInfo = arrayToString(iD, "destine", "destine");
                         userInput = JOptionPane.showInputDialog(gui, arrayInfo, "Destine", 1);
 
+                        /*
+                         * For cicle that compares the ID input with the IDs in the array.
+                         */
                         for (int i = 0; i < iD.length; i++) {
-                            if (userInput.equalsIgnoreCase(iD[i])) {
+                            if (iD[i].equalsIgnoreCase(userInput)) {
                                 route[iD.length - 1] = userInput;
                                 destineFound = true;
                                 break;
                             }
                         }
 
+                        // If condition that checks if the destine input by the user exist, if not,
+                        // sends an error message.
                         if (destineFound == false) {
                             JOptionPane.showMessageDialog(gui,
                                     "You have entered a wrong destine city. Please input a correct option.", "ERROR",
@@ -288,6 +335,7 @@ public class AirlineGUI {
                      * Calculates the total distance of the travel and generates the cost of it.
                      */
                     totalDistance = mathC.calcTotalDistance(iD, latitudes, longitudes, route);
+
                     JOptionPane.showMessageDialog(gui,
                             "The flight will have a cost of $" + mathC.travelPrice(totalDistance, subscription) + ".",
                             "COST INFO",

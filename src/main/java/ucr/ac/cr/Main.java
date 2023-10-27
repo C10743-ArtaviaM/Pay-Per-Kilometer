@@ -32,11 +32,16 @@ public class Main {
          */
         while (validInitialization == false) {
             System.out.print("How did you wants to open the app?\n1) Console\n2) Simple GUI\n-> ");
+
+            /*
+             * Try / Catch that ensures that the user put a correct input, avoiding that the
+             * program falls if not.
+             */
             try {
                 userOptionString = input.nextLine();
                 userOption = Integer.parseInt(userOptionString);
 
-                // It ensures that the user input a valid initialization option.
+                // If condition that ensures that the user input a valid initialization option.
                 if (userOption != 1 && userOption != 2) {
                     System.out.println("ERROR: The option " + userOptionString
                             + " is not part of the initialization options. Please select a initialization option.");
@@ -49,9 +54,11 @@ public class Main {
             }
         }
 
+        // Console Mode
         if (userOption == 1) {
             System.out.println("Loading Console, please wait . . . ");
             run(1);
+            // Simple GUI Mode
         } else if (userOption == 2) {
             System.out.println("Loading GUI, please wait . . . ");
             run(2);
@@ -73,9 +80,11 @@ public class Main {
         // String[] Type Variables.
         String[] iD = { "SJO", "EWR", "LAP", "CDG" };
 
+        // Console Mode
         if (mode == 1) {
             Airline airline = new Airline();
             airline.menu(iD, latitudes, longitudes);
+            // Simple GUI mode
         } else {
             AirlineGUI airline = new AirlineGUI();
             airline.menu(iD, latitudes, longitudes);

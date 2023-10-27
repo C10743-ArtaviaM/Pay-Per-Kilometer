@@ -1,5 +1,8 @@
 package ucr.ac.cr;
 
+/**
+ * MathCalcs class that have all the calcs needed for the program.
+ */
 public class MathCalcs {
     /**
      * This method calculates the distance between two points around the world.
@@ -10,13 +13,13 @@ public class MathCalcs {
      * @param y2 Longitudes of the destine.
      * @return A double return consisting in the distance.
      */
-    public double calcDistance(double x1, double y1, double x2, double y2) {
-        double distance = 0;
+    public int calcDistance(double x1, double y1, double x2, double y2) {
+        // Int Type Variables.
+        int distance = 0;
 
-        distance = 6371.01
+        distance = (int) (Math.round(6371.01
                 * Math.acos(Math.sin(Math.toRadians(x1)) * Math.sin(Math.toRadians(x2)) + Math.cos(Math.toRadians(x1))
-                        * Math.cos(Math.toRadians(x2)) * Math.cos((Math.toRadians(y1)) - (Math.toRadians(y2))));
-        distance = Math.round(distance);
+                        * Math.cos(Math.toRadians(x2)) * Math.cos((Math.toRadians(y1)) - (Math.toRadians(y2))))));
 
         return distance;
     }
@@ -28,10 +31,14 @@ public class MathCalcs {
      * @param clientType The type of the passenger.
      * @return A double return consisting in the price.
      */
-    public double travelPrice(double distance, String clientType) {
+    public double travelPrice(int distance, String clientType) {
+        // Double Type Variables.
         double price = 0;
-        double exceedingDistance = 0;
 
+        // Int Type Variables.
+        int exceedingDistance = 0;
+
+        // If / else condition that calculates the price depending the distance.
         if (distance >= 1 && distance <= 1000) {
             if (clientType.equalsIgnoreCase("PREM")) {
                 price = distance * 0.55;
@@ -65,11 +72,17 @@ public class MathCalcs {
      * @param route      Array that contains the route of the passenger.
      * @return A double return consisting in the total distance of the flight.
      */
-    public double calcTotalDistance(String[] iD, double[] latitudes, double[] longitudes, String[] route) {
-        double totalDistance = 0;
+    public int calcTotalDistance(String[] iD, double[] latitudes, double[] longitudes, String[] route) {
+        // Double Type Variables.
         double prevLatitude = 0;
         double prevLongitude = 0;
 
+        // Int Type Variables.
+        int totalDistance = 0;
+
+        /*
+         * For cicle that calculates de distance between the points.
+         */
         for (int i = 0; i < route.length; i++) {
             for (int j = 0; j < iD.length; j++) {
                 if (route[i].equalsIgnoreCase(iD[j])) {
